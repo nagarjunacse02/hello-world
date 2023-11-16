@@ -5,7 +5,7 @@ FROM openjdk:8-jdk-alpine
 WORKDIR /app
 
 # Copy the WAR file into the container at /app
-COPY /var/lib/jenkins/workspace/test_job/webapp/target/webapp.war /app//webapp.war
+COPY /var/lib/jenkins/workspace/test_job/webapp/target/webapp.war /app/webapp.war
 
 # Expose the port that your application will run on
 EXPOSE 8080

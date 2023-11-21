@@ -19,7 +19,7 @@ pipeline {
         stage ('Build docker image') {
             steps {
                 script {
-                    sh 'docker build -t nagarjunacse02/test-image .'
+                    sh 'docker build -t nagarjunacse02/test-image1 .'
                     sh 'docker images'
                 }
             }
@@ -29,7 +29,7 @@ pipeline {
                 script {
                     withCredentials([string(credentialsId: 'dockerhub-pwd', variable: 'dockerhubpwd')]) {
                     sh 'docker login -u nagarjunacse02 -p ${dockerhubpwd}'
-                    sh 'docker push nagarjunacse02/test-image'
+                    sh 'docker push nagarjunacse02/test-image1'
                     }
                 }
             }
@@ -39,7 +39,7 @@ pipeline {
                 script {
                     withCredentials([string(credentialsId: 'github_token', variable: 'GITHUB_TOKEN')]) {
                         // Determine the image name dynamically based on your versioning strategy
-                        NEW_IMAGE_NAME = "nagarjunacse02/test-image:latest"
+                        NEW_IMAGE_NAME = "nagarjunacse02/test-image1:latest"
                         // Replace the image name in the deployment.yaml file
                         sh "sed -i 's|image: .*|image: $NEW_IMAGE_NAME|' regapp-deploy.yml"
                         // Commit and push changes

@@ -1,0 +1,10 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: example-app1
+  namespace: default
+spec:
+  interval: 1m0s
+  ref:
+    branch: master
+  url: https://github.com/nagarjunacse02/hello-world

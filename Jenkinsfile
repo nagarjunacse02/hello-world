@@ -63,7 +63,7 @@ pipeline {
                       "files": [
                         {
                           "pattern": "*.war",
-                           "target": "slk_poc-libs-snapshot-local"
+                           "target": "cicd_demo"
                         }
                     ]
                 }'''
@@ -91,10 +91,26 @@ pipeline {
                 script {
                     withCredentials([string(credentialsId: 'dockerhub-pwd', variable: 'dockerhubpwd')]) {
                     sh 'docker login -u nagarjunacse02 -p ${dockerhubpwd}'
-                    sh 'docker push nagarjunacse02/test-image.${BUILD_ID}'
                     sh "docker tag nagarjunacse02/test-image.${BUILD_ID} nagarjunacse02.azurecr.io/test-image.${BUILD_ID}:latest"
+                    sh 'docker push nagarjunacse02/test-image.${BUILD_ID}'
                     }
                 }
+            }
+        }
+        
+        stage('Push artifacts into artifactory') {
+            steps {
+              rtUpload (
+                serverId: 'Artifactory',
+                spec: '''{
+                      "files": [
+                        {
+                          "pattern": "*.test-image.${BUILD_ID}",
+                           "target": "cicd_docker_image"
+                        }
+                    ]
+                }'''
+              )
             }
         }
         
@@ -124,10 +140,12 @@ pipeline {
                         // Determine the image name dynamically based on your versioning strategy
                         NEW_IMAGE_NAME = "nagarjunacse02.azurecr.io/test-image.${BUILD_ID}:latest"
                         // Replace the image name in the deployment.yaml file
+                       // sh "sed -i 's|image: .*|image: $NEW_IMAGE_NAME|' regapp-deploy.yml"
                         sh "sed -i 's|image: .*|image: $NEW_IMAGE_NAME|' regapp-deploy.yml"
                         // Commit and push changes
                         sh 'git add regapp-deploy.yml'
                         sh "git commit -m 'Update Docker image in deployment file'"
+                        //sh "git push https://github.com/nagarjunacse02/hello-world.git HEAD:master"
                         sh "git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:master"
                     }
                 }

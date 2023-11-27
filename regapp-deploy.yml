@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: regapp
-        image: nagarjunacse02.azurecr.io/test-image.60:latest
+        image: nagarjunacse02/test-image.59
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

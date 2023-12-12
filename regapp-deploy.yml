@@ -16,7 +16,8 @@ spec:
     spec:
       containers:
       - name: regapp
-        image: fisdemo1.jfrog.io/fis-demo-dockerhub-docker-local/hello-world.17
+        #image: fisdemo1.jfrog.io/fis-demo-dockerhub-docker-local/hello-world.17
+        image: alpine:latest
         ports:
         - containerPort: 8080
         imagePullPolicy: Always  # Set image pull policy explicitly

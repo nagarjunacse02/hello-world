@@ -4,13 +4,11 @@ metadata:
   name: example-app1
   labels: 
      app: regapp
-
 spec:
   replicas: 2 
   selector:
     matchLabels:
       app: regapp
-
   template:
     metadata:
       labels:
@@ -19,12 +17,12 @@ spec:
       containers:
       - name: regapp
         image: fisdemo1.jfrog.io/fis-demo-dockerhub-docker-local/hello-world.17
-        #image: nagarjunacse02/test-image.59
-      imagePullSecrets:  
-      - name: artifactory-credentials
-        imagePullPolicy: Always
         ports:
         - containerPort: 8080
+        imagePullPolicy: Always  # Set image pull policy explicitly
+      imagePullSecrets:  
+      - name: artifactory-credentials
+ 
   strategy:
     type: RollingUpdate
     rollingUpdate:

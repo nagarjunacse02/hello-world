@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: regapp
-        image: nagarjunacse02/myapp
+        image: nagarjunacse02/cowsay1
         #image: nagarjunacse02/petclinic_app.24:latest
         ports:
         - containerPort: 8080

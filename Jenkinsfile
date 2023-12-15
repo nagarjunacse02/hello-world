@@ -25,6 +25,11 @@ pipeline {
                 }
             }
         }
+    stage('Trivy Scan') {
+            steps {
+                imageVulScan()
+            }
+		} 
   }
 }
         

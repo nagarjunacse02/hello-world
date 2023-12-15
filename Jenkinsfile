@@ -11,6 +11,11 @@ pipeline {
         cleanWorkspace()
       }
     }
+    stage ('source code checkout') {
+        steps { 
+           checkoutGit('https://github.com/nagarjunacse02/hello-world.git', 'master') 
+        }
+    }
   }
 }
         

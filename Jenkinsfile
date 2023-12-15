@@ -13,11 +13,18 @@ pipeline {
            checkoutGit('https://github.com/nagarjunacse02/hello-world.git', 'master') 
         }
     }
-    stage ('Build') {
+    stage ('Build Artifacts') {
       steps { 
         buildCode()
       }
     }
+    stage ('Build docker image') {
+            steps {
+                script {
+                    buildImage()
+                }
+            }
+        }
   }
 }
         

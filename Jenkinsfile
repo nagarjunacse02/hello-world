@@ -10,7 +10,7 @@ pipeline {
     }
     stage ('source code checkout') {
         steps { 
-           checkoutGit('https://github.com/nagarjunacse02/hello-world.git', 'master') 
+           checkoutGit('https://github.com/nagarjunacse02/Youtube-app.git', 'master') 
         }
     }
     stage ('Build Artifacts') {

@@ -1,0 +1,12 @@
+teams:
+  teamA:
+    notificationEnabled: true
+    teamsWebhook: ${TEAM_A_TEAMS_WEBHOOK}
+
+  teamB:
+    notificationEnabled: false
+    teamsWebhook: ${TEAM_B_TEAMS_WEBHOOK}
+--
+notificationConfig:
+  teamAWebhook: 'https://slkgroup.webhook.office.com/webhookb2/c4c7884c-0a76-4784-aada-20eada41c4b3@01b695ba-6326-4daf-a9fc-629432404139/IncomingWebhook/eb3dcccfe46d4073990668feae69e21b/974cd3b4-e236-4806-9541-3c8a9cb0ae2f'
+--

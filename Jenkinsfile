@@ -1,5 +1,5 @@
-
 @Library('Jenkins_shared_library') _
+def configUtils = loadConfig()
 
 pipeline {
   agent any
@@ -15,6 +15,7 @@ pipeline {
     }
     environment {
         SCANNER_HOME=tool 'sonar-scanner'
+        URL_WEBHOOK = credentials("URL_WEBHOOK")
     }
   stages {
     stage ('clean workspace') {
@@ -43,7 +44,7 @@ pipeline {
         }
     }
     stage('Npm install'){
-    when { expression { params.action == 'create'}}    
+    when { expression { params.action == 'delete'}}    
         steps{
             npmInstall()
         }
@@ -55,7 +56,7 @@ pipeline {
         }
     }
     stage('Docker Build'){
-    when { expression { params.action == 'create'}}    
+    when { expression { params.action == 'delete'}}    
         steps{
             script{
                 def dockerHubUsername = params.DOCKER_HUB_USERNAME
@@ -71,5 +72,56 @@ pipeline {
             trivyImage()
         }
     }
+    /*stage ('Notifications') {
+        steps {
+            steps {
+                office365ConnectorSend webhookUrl: '${WEBHOOK_URL}',
+                message: 'Code is deployed',
+                status: 'Success'            
+            }
+        }
+    }*/
   }
+  
+  /*options {
+        office365ConnectorWebhooks([
+            [name: "Office 365", url: "${URL_WEBHOOK}", notifyBackToNormal: true, notifyFailure: true, notifyRepeatedFailure: true, notifySuccess: true, notifyAborted: true]
+        ])
+    }*/
+    post {
+        success {
+            script {
+                def config = configUtils.loadNotificationConfigFromYaml()
+                def teamAWebhook = config.teamAWebhook
+                echo "Success! Team A Webhook URL: ${teamAWebhook}"
+            //    sendTeamsNotification(teamAWebhook, "Success Message")
+                sendTeamsNotification('${URL_WEBHOOK}', "Build Successful", "00FF00")
+                
+                }
+            }
+
+        failure {
+            script {
+    
+                def config = configUtils.loadNotificationConfigFromYaml()
+                def teamAWebhook = config.teamAWebhook
+                echo "Failure! Team A Webhook URL: ${teamAWebhook}"
+                sendTeamsNotification('${URL_WEBHOOK}', "Build Failed", "FF0000")
+            }
+        } 
+    }        
+
+  }    
+def sendTeamsNotification(webhookUrl, message, color) {
+    def currentBuildUrl = "${env.BUILD_URL}"
+    def buildNumber = "${env.BUILD_NUMBER}"
+    def jobName = "${env.JOB_NAME}"
+    def payload = """
+    {
+        "themeColor": "FF0000",
+        "title": "${message}",
+        "text": "Build Number: ${buildNumber}\nJob Name: ${jobName}\nBuild Details: ${currentBuildUrl}"
+    }
+    """
+    sh "curl -X POST -H 'Content-Type: application/json' -d '${payload}' ${URL_WEBHOOK}"
 }

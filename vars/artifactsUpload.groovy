@@ -1,13 +1,5 @@
 def call(String dockerHubUsername, String imageName) { 
-  rtUpload (
-                serverId: 'fisdemo',
-                spec: '''{
-                      "files": [
-                        {
-                          "pattern": "*${imageName}",
-                           "target": "fis-demo-dockerhub-docker/"
-                        }
-                    ]
-                }'''
-            )
+  docker login -u gorantla.nagarjuna@slkgroup.com fisdemo1.jfrog.io -p Admin@123
+  docker tag ${imageName} fisdemo1.jfrog.io/demo-fis-docker-docker-local/${imageName}:latest
+  docker push fisdemo1.jfrog.io/demo-fis-docker-docker-local/${imageName}:latest
 }

@@ -4,7 +4,7 @@ def call(String dockerHubUsername, String imageName) {
                 spec: '''{
                       "files": [
                         {
-                          "pattern": "*${dockerHubUsername}/${imageName}",
+                          "pattern": "*${imageName}",
                            "target": "fis-demo-dockerhub-docker/"
                         }
                     ]

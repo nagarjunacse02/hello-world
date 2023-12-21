@@ -1,7 +1,7 @@
 def call(String jfrogArtifactory, String imageName) {
   sh "docker login -u gorantla.nagarjuna@slkgroup.com fisdemo1.jfrog.io -p Admin@123"
-  sh "docker tag youtube fisdemo1.jfrog.io/demo-fis-docker-docker-local/youtube:latest"
-  sh "docker push fisdemo1.jfrog.io/demo-fis-docker-docker-local/youtube:latest"
+  sh "docker tag youtube-5 fisdemo1.jfrog.io/demo-fis-docker-docker-local/youtube-5:latest"
+  sh "docker push fisdemo1.jfrog.io/demo-fis-docker-docker-local/youtube-5:latest"
 }
   
   //withCredentials([usernamePassword(credentialsId: 'artifact_creds', passwordVariable: 'pw', usernameVariable: 'un')]) {

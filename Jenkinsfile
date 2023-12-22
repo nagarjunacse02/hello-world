@@ -7,7 +7,8 @@ pipeline {
         choice(name: 'action', choices: 'create\ndelete', description: 'Select create or destroy.')
         
         string(name: 'DOCKER_HUB_USERNAME', defaultValue: 'nagarjunacse02', description: 'Docker Hub Username')
-        string(name: 'IMAGE_NAME', defaultValue: 'youtube', description: 'Docker Image Name')
+        string(name: 'IMAGE_NAME', defaultValue: 'youtube1.1', description: 'Docker Image Name')
+        string(name: 'JFROG_ARTIFACTORY', description: 'Jfrog Artifactory', defaultValue:'fisdemo1.jfrog.io/demo-fis-docker-docker-local')
     }
     tools{
         jdk 'jdk17'
@@ -29,7 +30,7 @@ pipeline {
         }
     }
     stage('sonarqube Analysis'){
-    when { expression { params.action == 'delete'}}    
+    when { expression { params.action == 'create'}}    
         steps{
             sonarqubeAnalysis()
         }
@@ -44,19 +45,19 @@ pipeline {
         }
     }
     stage('Npm install'){
-    when { expression { params.action == 'delete'}}    
+    when { expression { params.action == 'create'}}    
         steps{
             npmInstall()
         }
     }
     stage('Trivy FS Scan') { 
-    when { expression { params.action == 'delete'}}
+    when { expression { params.action == 'create'}}
         steps { 
             trivyFileScan()
         }
     }
     stage('Docker Build'){
-    when { expression { params.action == 'delete'}}    
+    when { expression { params.action == 'create'}}    
         steps{
             script{
                 def dockerHubUsername = params.DOCKER_HUB_USERNAME
@@ -66,12 +67,24 @@ pipeline {
             }
         }
     }
-    stage('Trivy iamge'){
+    
+    stage('Push artifacts into artifactory') {
+        steps {
+            script {
+                def jfrogArtifactory = params.JFROG_ARTIFACTORY
+                def imageName = params.IMAGE_NAME
+                artifactsUpload(jfrogArtifactory, imageName)
+            }
+         }
+    }
+    
+    stage('Trivy image scan'){
     when { expression { params.action == 'create'}}    
         steps{
             trivyImage()
         }
     }
+    
     /*stage ('Notifications') {
         steps {
             steps {
